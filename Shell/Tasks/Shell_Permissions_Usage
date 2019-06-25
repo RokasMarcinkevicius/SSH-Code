@@ -1,0 +1,41 @@
+/* An example task for Shell permissions and their usage/modification */
+/* Task:
+---  In the /usr/bin folder find files, whose owner is not "root" user.
+---  Create a lab1/bin folder in Your home
+---  For every file found in the first step create a file with the same name and permissions in a lab1/bin folder
+---  and write a checksum of an orifginal file to it (as displayed by cksum command).
+---  If Your permissions are not enough to get a checksum - write an explanation (what permissions exactly are missing)
+---  to the results file instead.
+---  Provide the following info in the answer:
+---  a full sequence of commands required to get the result (may be a history fragment with not necessary commands removed)
+---  the result, as displayed by a command
+---  find ~/lab1/bin -ls -type f -exec cat {} \;
+*/
+---
+---
+---
+/* Task solved as requested: */
+cd ~
+touch binfiletemp
+cd /usr/bin
+ls -l > /export/home/rokmar2/binfiletemp
+cd ~
+grep -v root binfiletemp > binfiletemp2
+mkdir lab1/bin
+cd lab1/bin
+touch stclient
+touch tip
+chmod 755 stclient
+chmod u+s stclient
+chmod 511 tip
+chmod u+s tip
+cd /usr/bin
+cksum stclient > /export/home/rokmar2/lab1/bin/stclient
+#can't run cksum on the file tip as I don't have read permissions which would allow me to do it
+find ~/lab1/bin -ls -type f -exec cat {} \;
+   34    2 drwxr-xr-x   2 rokmar2  users           4 Apr  4 10:26 /export/home/rokmar2/lab1/bin
+   41    1 -r-s--x--x   1 rokmar2  users           0 Apr  4 10:26 /export/home/rokmar2/lab1/bin/tip
+   39    1 -rwxr-xr-x   1 rokmar2  users          26 Apr  4 10:30 /export/home/rokmar2/lab1/bin/stclient
+475610320       113168  stclient
+
+/* Task rated completed at 13.5 out of 15 */ 
