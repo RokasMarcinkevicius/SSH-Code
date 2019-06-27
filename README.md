@@ -9,10 +9,12 @@ It contains all that I know about code separated into languages, which are then 
 2. Algorithms(path find, djikstra, quick sort)
 3. Text operations
 
----SSH---
-1.
-2.
-3.
+SSH 
+1. An example task for past Shell Connection sorting, display and grouping
+2. Script for Indefinite User interaction with Keyboard Input
+3. An example task for Shell permissions, their usage and modification
+
+
 
 ---Python---
 1.
