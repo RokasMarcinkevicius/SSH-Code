@@ -1,0 +1,63 @@
+/* An example task for past Shell Connection sorting, display and grouping */
+/* Task:
+---  Create a shell script ld2ten.sh, which creates a summary of data displayed by "last -a -10000" command and displays it. 
+--- Expected format:
+IP_or_host1: M1
+      login1 N1
+      login2 N2
+
+IP_or_host2: M2
+      login2 N1
+      login3 N2
+      
+--- Here: 
+--- loginX - user login name (as displayed in by "last -a" in the first column);
+--- IP_or_hostX - host where from user has logged in to a machine (as displayed in by "last -a" in the last column);
+--- Nx - number of connections of this user;
+--- Mx - total number of user sessions (sum of Nx values for a host)
+--- Blocks, describing different hosts should be separated by an empty line; 
+--- There should be at least one whitespace (space or tab) in front of loginX lines. 
+*/
+---
+---
+---
+/* Task script as requested: */
+
+last -a -n 10000 | awk '{ print $1, $10; }' | sort | uniq -c > tmp1
+
+awk '{print $2 , $3, $1;}' tmp1 > tmp2
+
+for u in `awk '{print $1 }' tmp2 | sort | uniq`; do
+        t=`grep $u tmp2  | awk '{total=total+$3;} END{print total;}'`
+        echo $u: $t
+        grep $u tmp2 | awk '{print "    ",$2,$3;};'
+        echo ""
+done
+
+/* Script output: */
+/.../
+rokmar2: 22
+     158.129.39.21 2
+     193.219.171.1 4
+     78-58-171-145.static.zebra.lt 8
+     md-188-69-195-221.omni.lt 6
+     md-188-69-210-155.omni.lt 2
+
+rokmoc: 8
+     158.129.24.134 6
+     data-198-166.cgates.lt 2
+
+roksid: 2
+     78-63-248-95.static.zebra.lt 2
+
+rokurb: 12
+     158.129.18.18 6
+     158.129.34.131 2
+     78-60-100-24.static.zebra.lt 2
+     md-188-69-197-33.omni.lt 2
+
+rolmil: 101
+     158.129.34.113 8
+     193.219.171.1 93
+/.../
+/* Task rated completed as 10 out of 10 */ 
