@@ -1,4 +1,4 @@
-/* An example task for Shell permissions and their usage/modification */
+/* An example task for Shell permissions and their usage and or modification */
 /* Task:
 ---  In the /usr/bin folder find files, whose owner is not "root" user.
 ---  Create a lab1/bin folder in Your home
