@@ -1,0 +1,147 @@
+/* A script made to create child processes with the same specifications as the parent process. */
+/* Illustration */
+
+  Child_1
+  ↑
+Parent ----> Child_2 ---> Grand_Child
+  ↓
+  Child_3
+  
+/* Task:
+--- Create a C program (in shell), which:
+--- Creates 3 child processes (single parent has 10 child processes)
+--- Creates 1 grand-child process (single parent has a child process which has a child process in itself)
+--- Each Process writes its ID and the ID of the parent into the console.
+--- Program must handle errors correctly
+--- Program must not create more processes, than required by task (the mark will be reduced if more than required processes are created).
+*/
+/* Task Solved as requested */
+
+/* (C)2019 R. Marcinkevicius */
+/* File lab4.c */
+#include <stdio.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <signal.h>
+
+void child(void);
+void childpart2(void);
+void childpart3(void);
+void grandchild(void);
+void parent(int pid);
+
+
+void child(void) {
+        printf("Child:  Child process\n");
+        printf("%ld, %ld\n",getpid(),getppid());
+        sleep(1);
+        printf("Child:  Child exit\n");
+        exit(0);
+}
+
+void childpart2(void) {
+        printf("Child 2: Process\n");
+        printf("%ld, %ld\n",getpid(),getppid());
+        sleep(1);
+        int grandid;
+        switch (grandid = fork()) {
+        case 0:
+                printf("Grand  ID: %ld\n", (long)grandid );
+                grandchild();
+                break;
+        default:
+                printf("Child 2: exit\n");
+                break;
+        case -1:
+                perror("Fork for child 2 failed\n");
+                exit(1);
+        }
+
+        exit(0);
+}
+
+
+void childpart3(void) {
+        printf("Child 3: Process\n");
+        printf("%ld, %ld\n",getpid(),getppid());
+        sleep(1);
+        printf("Child 3: Exit\n");
+        exit(0);
+}
+
+void grandchild(void) {
+        printf("Grand Child \n");
+        printf("%ld, %ld\n",getpid(),getppid());
+        printf("Grand Child Exit\n");
+        exit(0);
+}
+
+void parent(int pid) {
+        printf("Parent process\n");
+        sleep(10);
+        printf("Parent exit\n");
+        exit(0);
+}
+
+int main( int argc, char * argv[] ){
+        int child1,child2,child3;
+        int papaid;
+        switch(papaid = fork()) {
+        case 0:
+                child1 = fork();
+                if(child1 == 0)
+                {
+                        printf("Child 1 ID: %ld\n", (long)child1 );
+                        child();
+                }
+                child2 = fork();
+                if(child2 == 0)
+                {
+                        printf("Child 2 ID: %ld\n", (long)child2 );
+                        childpart2();
+                }
+                child3 = fork();
+                if(child3 == 0)
+                {
+                        printf("Child 3 ID: %ld\n", (long)child3 );
+                        childpart3();
+                }
+                break;
+        default:
+                printf("Parent ID: %ld\n", (long)papaid );
+                parent(papaid);
+                break;
+        case -1:
+                perror("fork failure");
+                break;
+                exit(1);
+        }
+        exit(0);
+}
+
+/* Task Output: */
+./lab4
+Parent ID: 8449
+Parent process
+Child 1 ID: 0
+Child:  Child process
+8450, 8449
+Child 2 ID: 0
+Child 2: Process
+8451, 8449
+Child 3 ID: 0
+Child 3: Process
+8452, 1
+Child:  Child exit
+Child 3: Exit
+Child 2: exit
+Grand  ID: 0
+Grand Child
+8453, 8451
+Grand Child Exit
+Parent exit
+
+/* Task requirements met, task rated completed as 10/10 */
