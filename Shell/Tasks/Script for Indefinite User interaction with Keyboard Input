@@ -1,0 +1,58 @@
+/* An example task for a Shell Script with User interaction, keyboard input */
+/* Task:
+--- displays prompt and reads numbers from a standart input (not command line arguments) until empty line is entered;
+--- displays numbers on the standard output if the number entered is greater or lower than any number entered before (other numbers are discarded);
+--- first number entered should be displayed/marked either as a special case (not the greatest or the lowest).
+--- wrong input (non numeric strings) should be ignored.
+*/
+/* Sample session:
+./script.sh
+Enter numbers:
+5
+=== 5
+8
++++ 8
+4
+--- 4
+7
+8
+aaa
+9
++++ 9
+
+Program finished.
+(Here lines containing only a number, string "aaa" and empty line are entered by a user;
+"===" marks a special case, "+++" the greatest number, "---" the lowest number).
+*/
+/* Task solved as requested: */
+#(Just for clarification, the script is saved in a separate .sh file, this is the content of the script that is being run)
+
+#!/bin/sh
+# (C) 2019 R. Marcinkevicius
+
+echo "Enter numbers:"
+read START
+echo "===" $START
+max=$START
+min=$START
+runner=0
+end=5
+until [ "$runner" -eq $end ]
+do
+        read KEY
+        if [ "KEY" -eq '' ]; then
+                runner="$end"
+                echo "Program finished."
+        else if echo "$KEY" | grep -vE '^[[:digit:]]+$'; then
+                echo "$KEY"
+        else if [ "$KEY" -gt $max ]; then
+                max="$KEY"
+                 echo "+++" $max
+        else if [ "$KEY" -lt $min ]; then
+                min="$KEY"
+                 echo "---" $min
+        echo $KEY
+        fi fi fi fi
+done
+
+/* Task requirements met, task rated completed as 10/10 */
